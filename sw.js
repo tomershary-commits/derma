@@ -1,7 +1,7 @@
 // Derma offline cache. Network first (so new chapters show up), cache when offline.
-const VERSION='54c02d9fd2';
+const VERSION='062eb207c7';
 const CACHE='derma-'+VERSION;
-const FILES=["./", "derma.js", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "21a.html", "index.html", "data/21a.bin", "data/index.bin"];
+const FILES=["./", "derma.js", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "21a.html", "21b-d.html", "index.html", "data/21a.bin", "data/21b-d.bin", "data/index.bin"];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()));
 });
