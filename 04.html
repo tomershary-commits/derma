@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Derma</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<meta name="theme-color" content="#c4497e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Derma">
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{--bg:#fbf4f7;--surface:#fff;--fg:#2a1f25;--muted:#7a6670;--line:#ecd9e2;--accent:#c4497e;--accent-fg:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#1d1519;--surface:#281d23;--fg:#f3e8ee;--muted:#b9a3ae;--line:#3d2c35;--accent:#e58bb1;--accent-fg:#2a1f25;color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.5;
+  display:flex;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;padding:24px 16px}
+.box{width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
+.box img{width:112px;height:112px;border-radius:26px;box-shadow:0 6px 20px rgba(196,73,126,.25)}
+h1{margin:0;font-size:1.5rem}
+p{margin:0;color:var(--muted);font-size:.95rem}
+form{width:100%;display:flex;flex-direction:column;gap:10px}
+input{font:inherit;width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--fg);text-align:center}
+input:focus{outline:2px solid var(--accent);outline-offset:1px}
+button{font:inherit;font-weight:700;padding:12px 14px;border:0;border-radius:12px;background:var(--accent);color:var(--accent-fg);cursor:pointer}
+button:disabled{opacity:.6}
+.err{color:#c0392b;font-size:.9rem;min-height:1.3em}
+@media (prefers-color-scheme:dark){.err{color:#ff8a7a}}
+#loading{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="box" id="gate" hidden>
+  <img src="icons/icon-192.png" alt="">
+  <h1>Derma</h1>
+  <p>סיכומי רפואת עור למחלקה. הכניסה עם סיסמה.</p>
+  <form id="f" autocomplete="on">
+    <input type="text" name="username" value="derma" autocomplete="username" hidden>
+    <input id="pw" type="password" name="password" autocomplete="current-password" placeholder="סיסמה" required>
+    <button id="go" type="submit">כניסה</button>
+    <div class="err" id="err" role="alert"></div>
+  </form>
+</div>
+<div class="box" id="loading"><img src="icons/icon-192.png" alt=""><p id="lmsg">טוען…</p></div>
+<script>window.DERMA={page:"04",salt:"V1SMh5xgJTx2KXF59hzWWw==",iter:250000};</script>
+<script src="derma.js?v=72f868a703"></script>
+</body>
+</html>
