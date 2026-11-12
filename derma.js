@@ -16,9 +16,14 @@
   async function decrypt(rawB64,buf){
     const key=await crypto.subtle.importKey('raw',b64(rawB64),'AES-GCM',false,['decrypt']);
     const data=new Uint8Array(buf);
-    const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:data.slice(0,12)},key,data.slice(12));
-    const stream=new Blob([plain]).stream().pipeThrough(new DecompressionStream('gzip'));
-    return await new Response(stream).text();
+    let plain;
+    try{plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:data.slice(0,12)},key,data.slice(12))}catch(e){throw new Error('pw')}
+    if(typeof DecompressionStream!=='undefined'){
+      try{const stream=new Blob([plain]).stream().pipeThrough(new DecompressionStream('gzip'));return await new Response(stream).text()}catch(e){}
+    }
+    // older browsers (iOS before 16.4, some in-app browsers): unzip with fflate, loaded only when needed
+    if(!window.fflate)await new Promise((ok,no)=>{const s=document.createElement('script');s.src='fflate.js';s.onload=ok;s.onerror=()=>no(new Error('fetch'));document.head.appendChild(s)});
+    return new TextDecoder().decode(window.fflate.gunzipSync(new Uint8Array(plain)));
   }
   let payload=null;
   async function getPayload(){
@@ -36,10 +41,12 @@
   $('f').addEventListener('submit',async e=>{
     e.preventDefault();$('go').disabled=true;$('err').textContent='';
     try{
-      const raw=await derive($('pw').value);
+      if(!window.crypto||!crypto.subtle){$('err').textContent='הדפדפן הזה לא יכול לפתוח את האתר. פתחו את הקישור ב-Safari או ב-Chrome (לא מתוך WhatsApp או Instagram).';$('go').disabled=false;return}
+      const raw=await derive($('pw').value.trim());
       let html;
       try{html=await decrypt(raw,await getPayload())}
-      catch(err){if(err&&err.message==='fetch')throw err;$('err').textContent='הסיסמה לא נכונה. נסי שוב.';$('go').disabled=false;return}
+      catch(err){if(err&&err.message==='fetch')throw err;
+        $('err').textContent=(err&&err.message==='pw')?'הסיסמה לא נכונה. נסו שוב (אותיות קטנות באנגלית, בלי רווחים).':'הדפדפן לא הצליח לפתוח את העמוד. נסו לעדכן אותו או לפתוח ב-Safari או ב-Chrome.';$('go').disabled=false;return}
       try{localStorage.setItem(KEY,raw)}catch(_){}
       show(html);
     }catch(err){$('err').textContent='אין חיבור לאינטרנט כרגע. נסי שוב כשיש חיבור.';$('go').disabled=false}
