@@ -27,7 +27,7 @@
     if(!r.ok)throw new Error('fetch');
     return payload=await r.arrayBuffer();
   }
-  function show(html){document.open();document.write(html);document.close()}
+  function show(html){const fx='<style>[hidden]{display:none!important}</style>';const dt=/^\s*<!doctype[^>]*>/i;html=dt.test(html)?html.replace(dt,m=>m+fx):fx+html;document.open();document.write(html);document.close()}
   function gate(msg){
     $('loading').hidden=true;$('gate').hidden=false;$('err').textContent=msg||'';
     setTimeout(()=>$('pw').focus(),50);
