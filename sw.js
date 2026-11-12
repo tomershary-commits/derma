@@ -1,5 +1,5 @@
-// Derma offline cache. Network first (so new chapters show up), cache when offline.
-const VERSION='3ba4505951';
+// Derma offline cache. Network first, revalidated with the server every time (so new chapters show up), cache when offline.
+const VERSION='08eb767ddf';
 const CACHE='derma-'+VERSION;
 const FILES=["./", "derma.js", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "00.html", "01.html", "04.html", "08.html", "21a.html", "21b-d.html", "index.html", "data/00.bin", "data/01.bin", "data/04.bin", "data/08.bin", "data/21a.bin", "data/21b-d.bin", "data/index.bin"];
 self.addEventListener('install',e=>{
@@ -12,7 +12,7 @@ self.addEventListener('fetch',e=>{
   const u=new URL(e.request.url);
   if(e.request.method!=='GET'||u.origin!==location.origin)return;
   e.respondWith(
-    fetch(e.request).then(r=>{
+    fetch(e.request.url,{cache:'no-cache',credentials:'same-origin'}).then(r=>{
       if(r.ok){const c=r.clone();caches.open(CACHE).then(ca=>ca.put(e.request,c))}
       return r;
     }).catch(()=>caches.match(e.request,{ignoreSearch:true}).then(r=>r||caches.match('./')))

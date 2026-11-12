@@ -6,7 +6,7 @@
   const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
   const toB64=buf=>btoa(String.fromCharCode(...new Uint8Array(buf)));
 
-  if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+  if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{})}
 
   async function derive(pw){
     const base=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveBits']);
@@ -23,7 +23,7 @@
   let payload=null;
   async function getPayload(){
     if(payload)return payload;
-    const r=await fetch('data/'+D.page+'.bin');
+    const r=await fetch('data/'+D.page+'.bin',{cache:'no-cache'});
     if(!r.ok)throw new Error('fetch');
     return payload=await r.arrayBuffer();
   }
