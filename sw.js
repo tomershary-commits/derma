@@ -1,5 +1,5 @@
 // Derma offline cache. Network first, revalidated with the server every time (so new chapters show up), cache when offline.
-const VERSION='c363cafe94';
+const VERSION='e3bbb5af79';
 const CACHE='derma-'+VERSION;
 const FILES=["./", "derma.js", "fflate.js", "sync.js", "qrcode.js", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "00.html", "01.html", "04.html", "08.html", "10.html", "12.html", "14.html", "15.html", "18a.html", "21a.html", "21b-d.html", "24.html", "26.html", "29.html", "30.html", "41-43.html", "84.html", "13.html", "review.html", "exam.html", "mine.html", "compare.html", "search.html", "index.html", "data/00.bin", "data/01.bin", "data/04.bin", "data/08.bin", "data/10.bin", "data/12.bin", "data/14.bin", "data/15.bin", "data/18a.bin", "data/21a.bin", "data/21b-d.bin", "data/24.bin", "data/26.bin", "data/29.bin", "data/30.bin", "data/41-43.bin", "data/84.bin", "data/13.bin", "data/review.bin", "data/exam.bin", "data/mine.bin", "data/compare.bin", "data/search.bin", "data/index.bin"];
 self.addEventListener('install',e=>{
