@@ -33,6 +33,8 @@
     return payload=await r.arrayBuffer();
   }
   function show(html){const fx='<style>[hidden]{display:none!important}</style>';const dt=/^\s*<!doctype[^>]*>/i;html=dt.test(html)?html.replace(dt,m=>m+fx):fx+html;document.open();document.write(html);document.close()}
+  // wait briefly for the newest marks from the owner's other devices (only on a device linked to sync)
+  const ready=()=>window.DermaSync?window.DermaSync.ready(2500).catch(()=>{}):Promise.resolve();
   function gate(msg){
     $('loading').hidden=true;$('gate').hidden=false;$('err').textContent=msg||'';
     setTimeout(()=>$('pw').focus(),50);
@@ -48,7 +50,7 @@
       catch(err){if(err&&err.message==='fetch')throw err;
         $('err').textContent=(err&&err.message==='pw')?'הסיסמה לא נכונה. נסו שוב (אותיות קטנות באנגלית, בלי רווחים).':'הדפדפן לא הצליח לפתוח את העמוד. נסו לעדכן אותו או לפתוח ב-Safari או ב-Chrome.';$('go').disabled=false;return}
       try{localStorage.setItem(KEY,raw)}catch(_){}
-      show(html);
+      await ready();show(html);
     }catch(err){$('err').textContent='אין חיבור לאינטרנט כרגע. נסי שוב כשיש חיבור.';$('go').disabled=false}
   });
 
@@ -57,7 +59,7 @@
     if(!raw){gate();return}
     let buf;
     try{buf=await getPayload()}catch(_){$('lmsg').textContent='אין חיבור לאינטרנט, והעמוד הזה עוד לא נשמר במכשיר. נסי שוב כשיש חיבור.';return}
-    try{show(await decrypt(raw,buf))}
+    try{const html=await decrypt(raw,buf);await ready();show(html)}
     catch(_){try{localStorage.removeItem(KEY)}catch(e){}gate('הסיסמה השתנתה. הקלידי את הסיסמה החדשה.')}
   })();
 })();
